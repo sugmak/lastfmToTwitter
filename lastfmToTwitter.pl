@@ -18,15 +18,15 @@ my $lastfm_feedurl =
 "http://ws.audioscrobbler.com/1.0/user/$cfg->{'lastfm.username'}/recenttracks.rss";
 my $lastfm_mypage = "http://www.lastfm.jp/user/$cfg->{'lastfm.username'}";
 
-if ( !-f $cfg->{'lastfmToTwitter.local_mirror'} ) {
-    mirror( $lastfm_feedurl, $cfg->{'lastfmToTwitter.local_mirror'} );
+if ( !-f $cfg->{'lastfmToTwitter.local_cache_file'} ) {
+    mirror( $lastfm_feedurl, $cfg->{'lastfmToTwitter.local_cache_file'} );
 }
 
-if (mirror( $lastfm_feedurl, $cfg->{'lastfmToTwitter.local_mirror'} )==RC_NOT_MODIFIED){
+if (mirror( $lastfm_feedurl, $cfg->{'lastfmToTwitter.local_cache_file'} )==RC_NOT_MODIFIED){
     die 'No update since latest publish';
 }
 my $parser    = XML::RSS::Parser->new;
-my $latest_feed = $parser->parse_file( $cfg->{'lastfmToTwitter.local_mirror'} );
+my $latest_feed = $parser->parse_file( $cfg->{'lastfmToTwitter.local_cache_file'} );
 my $latest_tune = $latest_feed->query('//item')->query('title')->text_content;
 
 my $twitter = Net::Twitter::Lite->new(
